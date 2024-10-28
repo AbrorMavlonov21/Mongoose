@@ -1,6 +1,8 @@
 const { ResData } = require("../../lib/resData");
 const { CategoryModel } = require("../schemas/category.schema");
 const { nextTick } = require("node:process");
+const { CustomError } = require("../../lib/customError");
+const mongoose = require('mongoose');
 
 class CategoryService {
   #model;
@@ -35,6 +37,20 @@ class CategoryService {
     const resData = new ResData(200, "Deleted");
 
     return resData;
+  }
+  async getById(id){
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        throw new CustomError(400, "Invalid category ID format");
+    }
+    const data = await this.#model.findById(id);
+
+        if (!data) {
+      throw new CustomError(404, "Category not found by id!");
+    }
+
+    const resData = new ResData(200, "success", data);
+    return resData;
+
   }
 }
 

@@ -13,9 +13,14 @@ const userSchema = new mongoose.Schema({
   },
   fullname: {
     type: String,
+    trim: true
+  },
+  role: {
+    type: String,
     required: true,
     trim: true
   }
+
 });
 const UserModel = mongoose.model("Users", userSchema, "Users");
 

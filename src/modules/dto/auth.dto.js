@@ -1,6 +1,6 @@
 const Joi = require('joi');
 
-const userSchema = Joi.object({
+const authSchema = Joi.object({
   login: Joi.string()
     .trim()               
     .required()           
@@ -16,11 +16,6 @@ const userSchema = Joi.object({
       'any.required': 'Password cannot be empty'
     }),
   
-  fullname: Joi.string()
-    .trim()               
-    .optional(),
-  role: Joi.string().required().valid("admin", "client", "manager", "worker"),
-          
 });
 
-module.exports = { userSchema };
+module.exports = { authSchema };

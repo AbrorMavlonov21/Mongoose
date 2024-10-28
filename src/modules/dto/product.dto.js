@@ -30,13 +30,7 @@ const productSchema = Joi.object({
     }),
   
   categoryID: Joi.string()
-    .length(24)              
     .required()              
-    .messages({
-      'string.base': 'Category ID must be a string',
-      'string.length': 'Category ID must be 24 characters long',
-      'any.required': 'Category ID is required'
-    })
 });
 
 module.exports = { productSchema };
