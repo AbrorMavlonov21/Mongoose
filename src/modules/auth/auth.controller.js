@@ -3,6 +3,7 @@ const { userService } = require("../../modules/user/user.service");
 const { myHashing } = require("../../lib/bcrypt");
 const { authService } = require("../auth/auth.service");
 const { authSchema } = require("../dto/auth.dto");
+const { validater } = require("../../lib/validater")
 
 const { validate } = require("uuid");
 
@@ -19,7 +20,7 @@ class AuthController {
         try { 
 
        const dto = req.body;
-        validate(authSchema, dto);
+        validater(authSchema, dto);
 
         const { data: foundUserByLogin } = await this.#userService.getByLogin(
         dto.login
@@ -51,7 +52,7 @@ class AuthController {
     async register(req, res, next){
         try {
             const dto = req.body;
-            validate(authSchema, dto);
+            validater(authSchema, dto);
 
        const foundUserByLogin = await this.#userService.getByLogin(
         dto.login
@@ -60,8 +61,6 @@ class AuthController {
       if (foundUserByLogin.data) {
         throw new CustomError(400, "login already exist");
       }
-        const {data: hashedPassword} = await this.#authService.register(dto.password);
-        dto.password = hashedPassword;
         dto.role = "client";
 
 

@@ -1,6 +1,8 @@
 const { ResData } = require("../../lib/resData");
 const { UserModel } =require("../schemas/user.schema");
 const { authService } = require("../auth/auth.service");
+const { CustomError } = require("../../lib/customError");
+
 
 class UserService {
     #model;
@@ -16,12 +18,15 @@ class UserService {
     }
 
     async createUser(dto){
-        const {data: hashedPassword} = await this.#authService.register(dto.password);
-        dto.password = hashedPassword;
-        let createdData = await this.#model.create(dto);
+    if (dto.password) {
+    const { data: hashedPassword } = await this.#authService.register(dto.password);
+    dto.password = hashedPassword;
+    }
 
-        const resData = new ResData(201, "Created", createdData);
-        return resData;
+    let createdData = await this.#model.create(dto);
+
+    const resData = new ResData(201, "Created", createdData);
+    return resData;
     }
     async updateUser(id, dto){
         let updatedData = await this.#model.findByIdAndUpdate(id, dto);
