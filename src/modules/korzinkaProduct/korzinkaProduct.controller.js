@@ -99,11 +99,11 @@ async updateKorzinkaProduct(req, res, next){
             throw new CustomError(404, 'Product not found');
         }
 
-        if (product.count < count) {
+        if (product.count < dto.count) {
             throw new CustomError(400, 'Not enough products in stock');
         }
 
-        dto.totalPrice = product.price * count;
+        dto.totalPrice = product.price * dto.count;
 
         const resData = await this.#korzinkaProductService.update(korzinkaProductID, dto);
         res.status(resData.status).json(resData);
@@ -121,7 +121,7 @@ async deleteKorzinkaProduct(req, res, next){
             throw new CustomError(400, "Invalid ID format");
         }
         const resData = await this.#korzinkaProductService.delete(korzinkaProductID);
-        
+
         res.status(resData.status).json(resData)
 
         
