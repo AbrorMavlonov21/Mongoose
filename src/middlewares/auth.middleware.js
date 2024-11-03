@@ -12,7 +12,14 @@ class AuthMiddleware {
 
   checkToken(req, res, next) {
     try {
-      const token = req.headers.authorization;
+      const myHeader = req.headers.authorization;
+
+      if (!myHeader || !myHeader.startsWith('Bearer ')) {
+    throw new CustomError(401, "Authorization header with Bearer token is required");
+}
+
+      const token = myHeader.split(' ')[1];
+      
       if (!token) {
         throw new CustomError(401, "token must be required!");
       }

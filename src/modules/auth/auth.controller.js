@@ -3,7 +3,8 @@ const { userService } = require("../../modules/user/user.service");
 const { myHashing } = require("../../lib/bcrypt");
 const { authService } = require("../auth/auth.service");
 const { authSchema } = require("../dto/auth.dto");
-const { validater } = require("../../lib/validater")
+const { validater } = require("../../lib/validater");
+const { userSchema } = require("../dto/user.dto");
 
 const { validate } = require("uuid");
 
@@ -52,7 +53,8 @@ class AuthController {
     async register(req, res, next){
         try {
             const dto = req.body;
-            validater(authSchema, dto);
+            dto.role = "client";
+            validater(userSchema, dto);
 
        const foundUserByLogin = await this.#userService.getByLogin(
         dto.login
@@ -61,7 +63,7 @@ class AuthController {
       if (foundUserByLogin.data) {
         throw new CustomError(400, "login already exist");
       }
-        dto.role = "client";
+       
 
 
         const resData = await this.#userService.createUser(dto);

@@ -38,6 +38,17 @@ class ProductService {
         
         return resData;
     }
+    async getById(id){
+    const data = await this.#model.findById(id);
+
+        if (!data) {
+      throw new CustomError(404, "Product not found by id!");
+    }
+
+    const resData = new ResData(200, "success", data);
+    return resData;
+
+  }
 }
 
 const productService = new ProductService(ProductModel, categoryService)
