@@ -19,7 +19,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     trim: true
-  }
+  },
+  isVerified: { type: Boolean, default: false },
+  count: {type: Number, default: 0},
+  code: {type: String, default: null, require: false },
 
 });
 const UserModel = mongoose.model("Users", userSchema, "Users");

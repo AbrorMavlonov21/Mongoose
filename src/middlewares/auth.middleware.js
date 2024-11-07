@@ -3,7 +3,7 @@ const { myJwt } =require("../lib/jwt")
 const { userService } = require("../modules/user/user.service");
 
 class AuthMiddleware {
-    #jwt;
+  #jwt;
   #userService;
   constructor(jwt, userService) {
     this.#jwt = jwt;
@@ -48,6 +48,32 @@ async checkUser(req, res, next) {
       next();
     }catch(error){
         next(error);
+    }
+}
+async  checkTokenResetPassword(req, res, next) {
+    try {
+      const myHeader = req.headers.authorization;
+
+      if (!myHeader || !myHeader.startsWith('Bearer ')) {
+    throw new CustomError(401, "Authorization header with Bearer token is required");
+}
+
+      const token = myHeader.split(' ')[1];
+      
+      if (!token) {
+        throw new CustomError(401, "token must be required!");
+      }
+
+      const { id } = this.#jwt.verifyResetPassword(token);
+
+      const {data} = await this.#userService.getById(id);
+
+      req.currentUser = data
+      next();
+    }catch(error){
+        error.status = 401;
+      next(error);
+
     }
 }
 }

@@ -4,15 +4,25 @@ const { myHashing } = require("../../lib/bcrypt")
 
 class AuthService {
     #bcrypt;
-    constructor(bcrypt){
+    #jwt
+    constructor(bcrypt, jwt){
         this.#bcrypt = bcrypt;
+        this.#jwt = jwt;
     }
   generateToken(user) {
-    const token = myJwt.generate(user.id);
+    const accessToken = this.#jwt.generate(user.id);
 
-    const data = { user, token };
+    const refreshToken= this.#jwt.generateRefresh(user.id);
+
+    const data = { user, tokens: {accessToken, refreshToken} }; 
 
     return new ResData(200, "success", data);
+  }
+    resetPasswordToken(user) {
+    const Token = this.#jwt.generateResetPassword(user.id);
+
+
+    return new ResData(200, "success", Token);
   }
 
   async register(password) {
@@ -24,6 +34,6 @@ class AuthService {
   }
 }
 
-const authService = new AuthService(myHashing);
+const authService = new AuthService(myHashing, myJwt);
 
 module.exports = { authService };

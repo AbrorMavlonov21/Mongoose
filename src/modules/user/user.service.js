@@ -29,7 +29,7 @@ class UserService {
     return resData;
     }
     async updateUser(id, dto){
-        let updatedData = await this.#model.findByIdAndUpdate(id, dto);
+        let updatedData = await this.#model.findByIdAndUpdate(id, dto, {new: true});
 
         const resData = new ResData(200, "Updated", updatedData);
         return resData;
